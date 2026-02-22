@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+  <Styles>
+    <Style ss:ID="header">
+      <Font ss:Bold="1"/>
+      <Interior ss:Color="#4472C4" ss:Pattern="Solid"/>
+      <Font ss:Color="#FFFFFF" ss:Bold="1"/>
+    </Style>
+  </Styles>
+  <Worksheet ss:Name="Data">
+    <Table>
+      <Row ss:StyleID="header"><Cell><Data ss:Type="String">ID</Data></Cell><Cell><Data ss:Type="String">Email</Data></Cell><Cell><Data ss:Type="String">Name</Data></Cell><Cell><Data ss:Type="String">Phone</Data></Cell><Cell><Data ss:Type="String">Product</Data></Cell><Cell><Data ss:Type="String">Plan</Data></Cell><Cell><Data ss:Type="String">Email Sent</Data></Cell><Cell><Data ss:Type="String">Date</Data></Cell></Row>
+      
+    </Table>
+  </Worksheet>
+</Workbook>

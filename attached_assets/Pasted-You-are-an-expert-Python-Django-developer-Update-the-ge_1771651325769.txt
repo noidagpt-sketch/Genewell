@@ -1,0 +1,33 @@
+You are an expert Python/Django developer. Update the genewell.in application according to the following specifications:
+
+1. **Data Model** – Create or extend a Django model (e.g., UserProfile) to store all quiz fields from the provided image (name, email, phone, age, gender, location, craving, language, dna_upload, eating_out, tired_time, sleep_hours, wake_up_time, weight_goal, meals_per_day, stress_level, energy_levels, mood_patterns, skin_concerns, work_schedule, activity_level, digestive_issues, hunger_frequency, hydration_habits, supplement_usage, food_intolerances, bleeding_frequency, medical_conditions, exercise_preference). Use appropriate field types.
+
+2. **Validation** – In the form processing view, if gender == 'male' and medical_conditions contains 'pcos', remove it (or raise a validation error). Log a warning for admin review.
+
+3. **PDF Report – Summary Paragraph** – After the macronutrient section, add the exact paragraph:
+   "At {age} years with a BMI of {bmi:.1f} (weight {weight_kg} kg), your BMR is {bmr:.0f} kcal and your estimated TDEE is {tdee:.0f} kcal, which frames a controlled plan for healthy {goal_text}. Your macro target ({protein:.0f} g protein, {carbs:.0f} g carbs, {fats:.0f} g fats) supports lean mass accrual while addressing metabolic risk. Low activity ({activity_score}/100), very low energy ({energy_score}/100) and poor sleep ({sleep_score}/100) are limiting recovery and performance. Prioritizing sleep, insulin‑sensitive nutrition and gradual resistance training will be key to safe, sustainable gains."
+   Use mappings from the quiz strings to scores (e.g., 'very-low' → 15, etc.) and derive goal_text from weight_goal.
+
+4. **Essential Plan Lab Tests** – When the user has purchased the Essential plan, include 2–4 basic lab tests based on their profile. Use the logic provided (always Vitamin D + CBC, then conditionally add tests for PCOS, thyroid, vegetarian, digestive issues, heavy bleeding, or BMI/age). Render them in a simple table.
+
+5. **Premium Add‑Ons (Admin & Display)**  
+   a. Create a Django model `PremiumAddOn` with fields: name, slug, description, detailed_description, price_inr (integer, 99–799), image, is_active, and conditional fields (gender_required, min_activity_score, required_conditions).  
+   b. Register it with Django Admin so that admins can add/edit/delete add‑ons.  
+   c. In the PDF generation, call a function `get_relevant_addons(user)` that returns only the active add‑ons matching the user's gender, activity score, and health conditions.  
+   d. At the end of the PDF, add a "Premium Add‑Ons (Optional)" section listing each relevant add‑on with its name, short description, price (in ₹), and a call‑to‑action (e.g., a QR code linking to a purchase page).  
+   e. The purchase page should handle payment (Razorpay/Stripe) and associate the add‑on with the user.
+
+6. **Fix Known Errors**  
+   - Remove duplicate magnesium from supplement list – keep only magnesium glycinate (300–400 mg before bed).  
+   - Replace any broken hydration code (e.g., `Math.round`) with the actual calculated value: `f"{user.weight_kg * 0.033:.1f} L/day"`.  
+   - Ensure all gender‑specific sections (like Men's Performance Pack, Women's Hormonal Health) are conditionally included based on user gender.
+
+7. **Testing** – Test with the sample user "mohan" (male, 18, 80kg, 175cm, activity lightly-active, energy very-low, sleep less-than-5, medical conditions "pcos", etc.) to confirm:
+   - Summary paragraph uses correct mapped scores.
+   - Essential lab tests do NOT include PCOS tests.
+   - Relevant premium add‑ons are displayed (e.g., Men's Performance Pack, DNA Guide, etc.) and prices are between ₹99 and ₹799.
+   - No duplicate magnesium or broken code.
+
+8. **Deployment** – Ensure all migrations are applied and the admin panel shows the new PremiumAddOn model with full CRUD capabilities.
+
+Provide the updated code with clear comments and ensure it runs without errors.

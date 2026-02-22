@@ -1,0 +1,42 @@
+Create a complete Django web application for genewell.in that generates personalized wellness PDF reports based on user quiz data. The system must:
+
+1. **Database Models**  
+   - `UserProfile`: store all quiz fields from the admin panel image (name, email, phone, age, gender, location, cravings, language, dna_upload, eating_out, tired_time, sleep_hours, wake_up_time, weight_goal, meals_per_day, stress_level, energy_levels, mood_patterns, skin_concerns, work_schedule, activity_level, digestive_issues, hunger_frequency, hydration_habits, supplement_usage, food_intolerances, bleeding_frequency, medical_conditions, exercise_preference, height_cm, weight_kg, plan_type, purchased_addons as JSONField).
+   - `PremiumAddOn`: name, slug, short_description, detailed_description, price_inr (99-799), image, is_active, gender_required, min_activity_score, required_conditions.
+
+2. **Data Validation**  
+   - If gender male and medical_conditions contains "pcos", remove it automatically.
+   - Ignore bleeding_frequency for males.
+
+3. **Admin Panel**  
+   - Register both models with full list_display, filters, search, fieldsets.
+   - Add export_to_excel action for UserProfile using pandas to export all fields.
+
+4. **PDF Generation (ReportLab)**  
+   - Cover page with user name, date, order ID, age, gender, height, weight, BMI, TDEE.
+   - Auto-generated table of contents with page numbers.
+   - Section 1: Personalized health summary with exact paragraph using user data and mapped scores (activity_score from activity_level, energy_score from energy_levels, sleep_score from sleep_hours, goal_text from weight_goal).
+   - Standard sections (metabolic, digestive, skin, lab tests for essential plan, supplements, workout, tracking, action plan, closing) – all personalized using user's data and with scientific citations (AJCN, JISSN, Gut, JAAD, etc.).
+   - If user has purchased add‑ons (purchased_addons list), insert their full detailed_description as separate sections with heading "Included in Your Plan".
+   - After purchased add‑ons, show a "Premium Add‑Ons (Optional)" section listing relevant but not purchased add‑ons (based on gender, activity score, required_conditions) with price and purchase link.
+   - No duplicate magnesium; only magnesium glycinate.
+   - Hydration target = weight_kg * 0.033 L/day.
+
+5. **Utility Functions**  
+   - `map_scores(user)`: return activity_score, energy_score, sleep_score, goal_text.
+   - `get_essential_lab_tests(user)`: always Vitamin D and CBC, plus up to 2 more based on PCOS, thyroid, vegetarian, digestive issues, heavy bleeding, or BMI/age.
+   - `get_relevant_optional_addons(user)`: return active add‑ons not purchased, matching user's profile.
+
+6. **Views**  
+   - `quiz_submit`: process POST with all fields, clean data, create UserProfile, generate PDF, return as download.
+   - `buy_addon`: placeholder for payment processing; on success, add slug to purchased_addons.
+
+7. **URLs and Templates**  
+   - Include URL patterns for quiz submission and buy-addon.
+   - Create a basic quiz form template (quiz.html) with all fields.
+
+8. **Settings**  
+   - Add 'core' app to INSTALLED_APPS.
+   - Configure media and static files.
+
+Provide all necessary files (models.py, admin.py, views.py, utils.py, urls.py, templates, settings updates) in a single, well‑structured Django project. Ensure the code is production‑ready, with proper imports and comments. The PDF must be 100% personalized, science‑backed, and error‑free.
