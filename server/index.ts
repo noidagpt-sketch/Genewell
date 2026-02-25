@@ -146,6 +146,71 @@ export function createServer() {
 
   app.post("/api/track-visit", handleTrackVisitor);
 
+  app.get("/api/data/summary", async (_req, res) => {
+    try {
+      const { query } = require('./lib/db');
+
+      const usersResult = await query('SELECT COUNT(*) as count FROM users');
+      const quizResult = await query('SELECT COUNT(*) as count FROM quiz_submissions');
+      const purchasesResult = await query('SELECT COUNT(*) as count FROM purchases WHERE payment_status = $1', ['completed']);
+      const downloadsResult = await query('SELECT COUNT(*) as count FROM downloads');
+
+      res.json({
+        totalUsers: parseInt(usersResult.rows[0]?.count || 0),
+        totalQuizSubmissions: parseInt(quizResult.rows[0]?.count || 0),
+        completedPurchases: parseInt(purchasesResult.rows[0]?.count || 0),
+        totalDownloads: parseInt(downloadsResult.rows[0]?.count || 0),
+      });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch data summary' });
+    }
+  });
+
+  app.get("/api/data/recent-submissions", async (_req, res) => {
+    try {
+      const { query } = require('./lib/db');
+
+      const result = await query(`
+        SELECT
+          id,
+          user_email,
+          user_age,
+          user_gender,
+          created_at
+        FROM quiz_submissions
+        ORDER BY created_at DESC
+        LIMIT 20
+      `);
+
+      res.json(result.rows);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch recent submissions' });
+    }
+  });
+
+  app.get("/api/data/users", async (_req, res) => {
+    try {
+      const { query } = require('./lib/db');
+
+      const result = await query(`
+        SELECT
+          id,
+          email,
+          name,
+          age,
+          gender,
+          location,
+          created_at
+        FROM users
+        LIMIT 50
+      `);
+
+      res.json(result.rows);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch users' });
+    }
+  });
+
   app.use(narrativeRouter);
 
   return app;
