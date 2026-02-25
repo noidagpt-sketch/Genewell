@@ -111,15 +111,11 @@ export default function Checkout() {
         throw new Error(error.message || "Failed to create payment link");
       }
 
-      const { paymentUrl } = await response.json();
+      const { paymentUrl, purchaseId } = await response.json();
 
-      // Open Instamojo payment in new tab/window
-      window.open(paymentUrl, '_blank');
+      localStorage.setItem("currentPurchaseId", purchaseId.toString());
 
-      // After payment, user can access download page
-      setTimeout(() => {
-        navigate("/download", { state: { planId: configuration.planId, addOns: configuration.selectedAddOns } });
-      }, 1000);
+      window.location.href = paymentUrl;
     } catch (err) {
       console.error("Payment error:", err);
       alert(err instanceof Error ? err.message : "Payment failed");

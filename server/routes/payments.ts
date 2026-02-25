@@ -93,12 +93,16 @@ export const handleCreateDirectPaymentLink: RequestHandler = async (req, res) =>
       purpose = purpose.substring(0, 29);
     }
 
+    const appUrl = process.env.APP_URL || `${req.protocol}://${req.get('host')}`;
+    const redirectUrl = `${appUrl}/download?purchase_id=${purchaseId}`;
+
     const paymentUrl = generateDirectPaymentLink({
       amount: Math.round(amount * 100) / 100,
       buyerName: name || email,
       buyerEmail: email,
       buyerPhone: phone || '9999999999',
       purpose: purpose,
+      redirectUrl: redirectUrl,
     });
 
     res.json({
