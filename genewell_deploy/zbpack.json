@@ -1,0 +1,5 @@
+{
+  "build_command": "npm run build",
+  "start_command": "node dist/server/production.mjs",
+  "node_version": "22"
+}

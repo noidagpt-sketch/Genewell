@@ -1,0 +1,11 @@
+{
+  "build": {
+    "type": "dockerfile"
+  },
+  "run": {
+    "command": "node dist/server/production.mjs",
+    "env": {
+      "NODE_ENV": "production"
+    }
+  }
+}
